@@ -14,6 +14,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const mongoose = require('mongoose');
+const cors = require('cors'); // Place this with other requires (like 'path' and 'express')
 const PORT = process.env.PORT || 5005; // So we can run on heroku || (OR) localhost:5000
 
 const app = express();
@@ -50,3 +52,38 @@ app
     res.render('pages/404', { title: '404 - Page Not Found', path: req.url });
   })
   .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+// mongose
+// .connect('mongodb+srv://admin-user:12345@cse341cluster.lkzbg.mongodb.net/CSE341Cluster?retryWrites=true&w=majority')
+// .then(result => {
+//   app.listen(PORT);
+// })
+// .catch(err => {
+//   console.log(err);
+// });
+
+
+const corsOptions = {
+    origin: "https://enigmatic-temple-40398.herokuapp.com/",
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+const options = {
+    family: 4
+};
+
+const MONGODB_URL = process.env.MONGODB_URL || "mongodb+srv://admin-user:12345@cse341cluster.lkzbg.mongodb.net/CSE341Cluster?retryWrites=true&w=majority";
+
+
+
+mongoose
+  .connect(
+    MONGODB_URL, options
+  )
+  .then(result => {
+    app.listen(PORT);
+  })
+  .catch(err => {
+    console.log(err);
+  });
